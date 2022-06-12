@@ -12,30 +12,60 @@ code {
     monospace;
 }
 
+.container {
+  max-width: 40% !important;
+  background:rgb(147, 64, 64);
+}
+
 .todo-wrapper {
   display: flex;
   flex-direction: column;
-  background: rgb(227, 226, 226);
   border: 1px solid rgb(227, 226, 226);
-  
+  margin-top: 5%;
 }
 
 .todo-header {
-
+  display: flex;
+  font-size: 5rem;
+  justify-content: center;
+  padding: 1rem;
 }
 
-.wrapper {
-   background: white;
-   margin: 10px;
-   padding: 5px;
+.wrapper,
+.wrapper-dashboard {
+  display: flex;
+  background: white;
+  margin: 10px;
+  padding: 5px;
+  font-size: 2rem;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid rgb(229, 228, 226);
+}
+.bi-check2 {
+  color: rgb(229, 228, 226) !important;
+}
+
+.bi-check2:hover {
+  cursor: pointer;
+  color: green !important;
+}
+
+.button-check {
+  border: none;
+  background: white;
 }
 
 input {
   outline: none;
 }
 
+::placeholder {
+  color: rgb(229, 228, 226);
+}
+
 .completed-task-name {
-  color: grey;
+  color: rgb(229, 228, 226);
   text-decoration: line-through;
 }
 
@@ -43,10 +73,15 @@ input {
   margin: 15px;
   cursor: pointer;
   padding: 5px 10px;
+  border: 1px solid white;
 }
 
 .button:hover {
   border: 1px solid rgb(189, 188, 188);
   background: rgb(189, 188, 188);
   color: white;
+}
+
+.wrapper-dashboard {
+  font-size: 1rem;
 }
