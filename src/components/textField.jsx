@@ -1,4 +1,4 @@
-const NewTask = ({ value, onNewTaskChange, onHandleSubmit }) => {
+const TextField = ({ value, onNewTaskChange, onHandleSubmit }) => {
   return ( 
     <div className='wrapper new-task-wrapper shadow-sm bg-body rounded d-flex justify-content-around'>
       <form onSubmit={onHandleSubmit} >
@@ -18,4 +18,4 @@ const NewTask = ({ value, onNewTaskChange, onHandleSubmit }) => {
   );
 };
  
-export default NewTask;
+export default TextField;

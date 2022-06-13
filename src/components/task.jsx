@@ -1,5 +1,4 @@
 const Task = ({ task, onTaskChangeClick }) => {
-  console.log('task', task);
 
   const getCircleClass = () => {
     return task.completed ? ' bi-check-circle' : ' bi-circle';

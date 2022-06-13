@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Task from "./task";
 import Dashboard from "./dashboard";
-import NewTask from "./newTask";
+import TextField from "./textField";
+import { getTasks, renderTypeTasks } from "../utils/utils";
 
 const TodosWrapper = () => {
   const [data, setData] = useState({ value: '', all: []});
@@ -27,7 +27,6 @@ const TodosWrapper = () => {
     });
     setTasks(data.all);
   };
-
   const toggleComplete = (id) => {
     const completedTasks = data.all.map(task => {
       if(task.id === id) {
@@ -39,6 +38,7 @@ const TodosWrapper = () => {
       }
       return {...task}
     });
+  
     setData({
       ...data,
       all: [...completedTasks]
@@ -47,37 +47,20 @@ const TodosWrapper = () => {
 
   const handleCategoryChoose = (className) => {
     if(className.includes('active')) {
-      const actives = data.all.filter(task => !task.completed);
-      setTasks(actives);
+      setTasks(getTasks(data.all, 'active'));
     } else if(className.includes('completed')) {
-      const actives = data.all.filter(task => task.completed);
-      setTasks(actives);
+      setTasks(getTasks(data.all, 'completed'));
     } else if(className.includes('all')) {
       setTasks(data.all);
     }
   };
 
   const handleDeleteComplete = () => {
-    const active = data.all.filter(task => !task.completed);
+    const filteredTasks = data.all.filter(task => !task.completed);
     setData({
       ...data,
-      all: active
+      all: filteredTasks
     });
-  };
-
-  const renderTypeTasks = (arrayOfTasks) => {
-    if(arrayOfTasks.length > 0) {
-      return (
-        <>
-          { arrayOfTasks.map((activeTask, index) => <Task
-              key={index}
-              task={activeTask}
-              onTaskChangeClick={toggleComplete}
-            />)
-          }
-        </>
-      )
-    } else return <p className='d-flex justify-content-center font-italic'>No tasks yet</p>
   };
 
   const count = data.all.filter(task => !task.completed)?.length;
@@ -87,15 +70,15 @@ const TodosWrapper = () => {
   }, [data]);
 
   return ( 
-    <div className='container todo-wrapper shadow-lg p-3 mb-5 bg-body rounded align-middle bg-secondary'>
+    <div className='container todo-wrapper shadow-lg p-3 mb-5 bg-body rounded align-middle print-bg-secondary'>
       <h1 className='todo-header'>todos</h1>
-      <NewTask 
+      <TextField 
         value={data.value}
         onNewTaskChange={hanleChange}
         onHandleSubmit={handleSubmit} 
       />
     {
-      renderTypeTasks(tasks)
+      renderTypeTasks(tasks, toggleComplete)
     }
       <Dashboard
         count={count}

@@ -90,3 +90,7 @@ input {
 .wrapper-dashboard {
   font-size: 1rem;
 }
+
+.notification {
+  text-shadow: 1px 1px 1px grey;
+}
