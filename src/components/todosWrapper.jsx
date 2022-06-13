@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Task from "./task";
-import CompletedTask from "./completedTask";
 import Dashboard from "./dashboard";
 import NewTask from "./newTask";
 
@@ -11,8 +10,7 @@ const TodosWrapper = () => {
     {id:2, className: 'button active', text: 'Active'},
     {id:3, className: 'button completed', text: 'Completed'}
   ];
-  const [activeTasks, setActiveTasks] = useState([]);
-  //const [completeTasks, setCompleteTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const hanleChange = ({ target }) => {
     console.log(target.value);
     setData({ 
@@ -27,7 +25,7 @@ const TodosWrapper = () => {
       value: '',
       all: [...data.all, { id: Date.now(), name: data.value, completed: false}]
     });
-    setActiveTasks(data.all);
+    setTasks(data.all);
   };
 
   const toggleComplete = (id) => {
@@ -50,22 +48,20 @@ const TodosWrapper = () => {
   const handleCategoryChoose = (className) => {
     if(className.includes('active')) {
       const actives = data.all.filter(task => !task.completed);
-      console.log('actives', actives);
-      setActiveTasks(actives);
+      setTasks(actives);
     } else if(className.includes('completed')) {
       const actives = data.all.filter(task => task.completed);
-      console.log('actives', actives);
-      setActiveTasks(actives);
+      setTasks(actives);
     } else if(className.includes('all')) {
-      setActiveTasks(data.all)
+      setTasks(data.all);
     }
   };
 
-  const handleDeleteComplete = (id) => {
-    const active = data.all.filter(task => task.id === id ? !task.completed : null);
+  const handleDeleteComplete = () => {
+    const active = data.all.filter(task => !task.completed);
     setData({
       ...data,
-      all: active 
+      all: active
     });
   };
 
@@ -81,13 +77,13 @@ const TodosWrapper = () => {
           }
         </>
       )
-    } else return <p>Нет активных задач</p>
+    } else return <p className='d-flex justify-content-center font-italic'>No tasks yet</p>
   };
 
   const count = data.all.filter(task => !task.completed)?.length;
 
   useEffect(() => {
-    setActiveTasks(data.all);
+    setTasks(data.all);
   }, [data]);
 
   return ( 
@@ -99,7 +95,7 @@ const TodosWrapper = () => {
         onHandleSubmit={handleSubmit} 
       />
     {
-      renderTypeTasks(activeTasks)
+      renderTypeTasks(tasks)
     }
       <Dashboard
         count={count}

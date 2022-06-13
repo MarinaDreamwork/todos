@@ -1,7 +1,7 @@
 const NewTask = ({ value, onNewTaskChange, onHandleSubmit }) => {
   return ( 
-    <div className='wrapper new-task-wrapper shadow-sm bg-body rounded'>
-      <form onSubmit={onHandleSubmit}>
+    <div className='wrapper new-task-wrapper shadow-sm bg-body rounded d-flex justify-content-around'>
+      <form onSubmit={onHandleSubmit} >
         <input 
           className='border-0 m-3'
           placeholder='What needs to be done?'
