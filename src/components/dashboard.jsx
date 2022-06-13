@@ -1,4 +1,4 @@
-const Dashboard = ({ count, buttons, onChooseCategoryTask }) => {
+const Dashboard = ({ count, buttons, onChooseCategoryTask, onDeleteTask }) => {
   return ( 
     <div className='wrapper-dashboard d-flex justify-content-between align-items-center'>
       <div>
@@ -6,10 +6,15 @@ const Dashboard = ({ count, buttons, onChooseCategoryTask }) => {
       </div>
       <div>
        {
-        buttons.map(button => <span key={button.id} className={button.className} onClick={() => onChooseCategoryTask(button.className)}>{button.text}</span>)
+        buttons.map(button => <span
+            key={button.id}
+            className={button.className}
+            onClick={() => onChooseCategoryTask(button.className)}>
+              {button.text}
+          </span>)
        }
       </div>
-      <span className='button'>Clear completed</span>
+      <span className='button' onClick={onDeleteTask}>Clear completed</span>
     </div>
   );
 };

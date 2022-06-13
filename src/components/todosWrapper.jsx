@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Task from "./task";
 import CompletedTask from "./completedTask";
 import Dashboard from "./dashboard";
 import NewTask from "./newTask";
 
 const TodosWrapper = () => {
-  const [data, setData] = useState({ value: '', active: []});
+  const [data, setData] = useState({ value: '', all: []});
   const buttons = [
     {id:1, className: 'button all', text: 'All'},
     {id:2, className: 'button active', text: 'Active'},
     {id:3, className: 'button completed', text: 'Completed'}
   ];
-  // const [activeTasks, setActiveTasks] = useState([]);
+  const [activeTasks, setActiveTasks] = useState([]);
   //const [completeTasks, setCompleteTasks] = useState([]);
   const hanleChange = ({ target }) => {
     console.log(target.value);
@@ -25,14 +25,13 @@ const TodosWrapper = () => {
     setData({
       ...data,
       value: '',
-      active: [...data.active, { id: Date.now(), name: data.value, completed: false}]
+      all: [...data.all, { id: Date.now(), name: data.value, completed: false}]
     });
-    //setActiveTasks([...activeTasks, data.value]);
-    console.log('data', data);
+    setActiveTasks(data.all);
   };
 
   const toggleComplete = (id) => {
-    const completedTasks = data.active.map(task => {
+    const completedTasks = data.all.map(task => {
       if(task.id === id) {
         if(!task.completed) {
           return {...task, completed: true}
@@ -44,19 +43,52 @@ const TodosWrapper = () => {
     });
     setData({
       ...data,
-      active: [...completedTasks]
+      all: [...completedTasks]
     })
   };
 
   const handleCategoryChoose = (className) => {
     if(className.includes('active')) {
-      console.log('active', className);
+      const actives = data.all.filter(task => !task.completed);
+      console.log('actives', actives);
+      setActiveTasks(actives);
     } else if(className.includes('completed')) {
-      console.log('completed', className);
+      const actives = data.all.filter(task => task.completed);
+      console.log('actives', actives);
+      setActiveTasks(actives);
     } else if(className.includes('all')) {
-      console.log('all', className);
+      setActiveTasks(data.all)
     }
   };
+
+  const handleDeleteComplete = (id) => {
+    const active = data.all.filter(task => task.id === id ? !task.completed : null);
+    setData({
+      ...data,
+      all: active 
+    });
+  };
+
+  const renderTypeTasks = (arrayOfTasks) => {
+    if(arrayOfTasks.length > 0) {
+      return (
+        <>
+          { arrayOfTasks.map((activeTask, index) => <Task
+              key={index}
+              task={activeTask}
+              onTaskChangeClick={toggleComplete}
+            />)
+          }
+        </>
+      )
+    } else return <p>Нет активных задач</p>
+  };
+
+  const count = data.all.filter(task => !task.completed)?.length;
+
+  useEffect(() => {
+    setActiveTasks(data.all);
+  }, [data]);
 
   return ( 
     <div className='container todo-wrapper shadow-lg p-3 mb-5 bg-body rounded align-middle bg-secondary'>
@@ -66,17 +98,14 @@ const TodosWrapper = () => {
         onNewTaskChange={hanleChange}
         onHandleSubmit={handleSubmit} 
       />
-      {data.active.length > 0 ?
-        data.active.map((activeTask, index) => <Task 
-          key={index}
-          task={activeTask}
-          onTaskChangeClick={toggleComplete}
-        />) :
-        null}
+    {
+      renderTypeTasks(activeTasks)
+    }
       <Dashboard
-        count={data.active.length}
+        count={count}
         buttons={buttons}
         onChooseCategoryTask={handleCategoryChoose}
+        onDeleteTask={handleDeleteComplete}
       />
     </div>
   );
