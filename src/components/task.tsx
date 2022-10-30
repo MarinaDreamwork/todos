@@ -1,4 +1,11 @@
-const Task = ({ task, onTaskChangeClick }) => {
+import { ITask } from 'types/task.interface';
+
+type TaskProps = {
+  task: ITask,
+  onTaskChangeClick: (id: ITask['id']) => void
+}
+
+const Task = ({ task, onTaskChangeClick }: TaskProps) => {
 
   const getCircleClass = () => {
     return task.completed ? ' bi-check-circle' : ' bi-circle';
@@ -8,19 +15,19 @@ const Task = ({ task, onTaskChangeClick }) => {
     return task.completed ? ' completed-task-name' : '';
   };
 
-  return ( 
+  return (
     <div className='wrapper shadow-sm bg-body rounded'>
       <button
         className='button-circle'
         onClick={() => onTaskChangeClick(task.id)}>
-        <i 
+        <i
           className={'bi p-3 ' + getCircleClass()}
           style={{ fontSize: '2rem', color: 'rgb(229, 228, 226)' }}>
         </i>
       </button>
       <span className={'m-3' + getTaskNameClass()}>{task.name}</span>
     </div>
-   );
+  );
 }
- 
+
 export default Task;
