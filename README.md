@@ -1,4 +1,4 @@
-#Todo project:
+# Todo project:
 
 <img src=./readme_assets/TodoInAction.png/>
 
