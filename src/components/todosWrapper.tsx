@@ -5,14 +5,18 @@ import { getTasks, renderTypeTasks } from "../utils/utils";
 import { IButtonType } from 'types/button.interface';
 import { ITask } from 'types/task.interface';
 
+type ErrorType = null | string;
+
 type TasksData = {
   value: string,
-  all: ITask[]
+  all: ITask[],
+  error: ErrorType
 }
 
 const TodosWrapper = () => {
 
-  const [data, setData] = useState<TasksData>({ value: '', all: [] });
+  const initialState: TasksData = { value: '', all: [], error: null };
+  const [data, setData] = useState(initialState);
 
   const buttons: IButtonType[] = [
     { id: 1, className: 'button all', text: 'All' },
@@ -20,25 +24,43 @@ const TodosWrapper = () => {
     { id: 3, className: 'button completed', text: 'Completed' }
   ];
 
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [tasks, setTasks] = useState<ITask[] | undefined>([]);
 
   const handleChange = (e: { target: HTMLInputElement }) => {
-    console.log(e.target.value);
     setData({
       ...data,
       value: e.target.value
-    });
+    } as TasksData);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    validate(data.value);
+    if (!data.value) return;
     setData({
       ...data,
       value: '',
-      all: [...data.all, { id: Date.now(), name: data.value, completed: false }]
-    });
+      all: [...data.all, { id: Date.now(), name: data.value, completed: false }],
+      error: ''
+    } as TasksData);
     setTasks(data.all);
   };
+
+  const validate = (data: string) => {
+    if (data === '') {
+      setData(prevState => ({
+        ...prevState,
+        error: 'Поле должно быть заполнено'
+      }));
+    } else {
+      setData(prevState => ({
+        ...prevState,
+        error: null
+      }));
+    }
+  }
+
+  const isValid = data.error ? true : false;
 
   const toggleComplete = (id: IButtonType['id']) => {
     const completedTasks = data.all.map(task => {
@@ -55,7 +77,7 @@ const TodosWrapper = () => {
     setData({
       ...data,
       all: [...completedTasks]
-    })
+    } as TasksData)
   };
 
   const handleCategoryChoose = (className: string) => {
@@ -82,6 +104,12 @@ const TodosWrapper = () => {
     setTasks(data.all);
   }, [data]);
 
+  useEffect(() => {
+    if (data.value) {
+      validate(data.value);
+    }
+  }, [data.value]);
+
   return (
     <div className='container todo-wrapper shadow-lg p-3 mb-5 bg-body rounded align-middle print-bg-secondary'>
       <h1 className='todo-header'>todos</h1>
@@ -89,6 +117,8 @@ const TodosWrapper = () => {
         value={data.value}
         onNewTaskChange={handleChange}
         onHandleSubmit={handleSubmit}
+        error={data.error}
+        isValid={isValid}
       />
       {
         renderTypeTasks(tasks, toggleComplete)
